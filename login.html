@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style type="text/css">
+        .login input{
+            outline: none;
+            border:none;
+            border-bottom:1px solid #eee;
+            line-height: 1rem;
+            display: block;
+            width:8rem;
+            margin-left:1rem;
+        }
+        .login form{
+            margin-top:2rem;
+        }
+        .login button{
+            width:8rem;
+            height:1rem;
+            color:#fff;
+            background:#00f;
+            border:none;
+            border-radius: 0.5rem;
+            margin-left:1rem;
+            outline: none;    
+        }
+        .login-title{
+            font-size:0.45rem;
+            text-align: center;
+            margin-top:3rem;
+        }
+    </style>
+    <title>用户登录</title>
+</head>
+<body>
+    <div class="login">      
+      <div class="login-title">Electronic Data Capture System</div>
+      <form>
+        <input type="text" class="username" placeholder="用户名"/>
+        <input type="text" class="password" placeholder="密码"/>
+        <button class="login-but">登录</button>
+      </form>
+    </div>
+    <script>
+        //使用rem布局监听窗口大小变化
+        var width = window.innerWidth || document.body.clientWidth || document.documentElement.clientWidth;
+        var docEl = document.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function() {
+                let wid = docEl.clientWidth;
+                if(wid>=540){
+                    docEl.style.fontSize = 54+'px';
+                }else{
+                    docEl.style.fontSize = wid/10 + 'px';
+                }
+            };
+        window.addEventListener(resizeEvt, recalc, false);
+        document.addEventListener('DOMContentLoaded', recalc, false);
+    </script>
+</body>
+</html>

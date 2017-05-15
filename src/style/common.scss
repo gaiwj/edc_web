@@ -1,0 +1,46 @@
+*{
+    padding:0;
+    margin:0;
+}
+ul{
+    list-style: none;
+}
+html,body,#app,.app{
+    height:100%;
+}
+.app{
+    display: flex;
+    flex-direction: column;
+}
+.header{
+    background:#06f;
+    text-align: center;
+    color:#fff;
+    height:1.2rem;
+    line-height: 1.2rem;
+    font-size:0.4rem;
+}
+.projectList{
+    display: flex;
+    border-top:1px solid #fff;
+    li{
+        flex:1;
+        font-size:0.4rem;
+        border-right: 1px solid #fff;
+        text-align: center;
+        border-bottom:3px solid #fff;
+        a{
+            display: block;
+            line-height: 1.2rem;
+            text-decoration: none;
+            color:#999;
+        }
+        .current{
+            border-bottom:3px solid #06f;
+            color:#000;
+        }
+    }
+}
+.content{
+    flex:1;
+}
