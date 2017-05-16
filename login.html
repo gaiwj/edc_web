@@ -12,19 +12,20 @@
             line-height: 1rem;
             display: block;
             width:8rem;
-            margin-left:1rem;
+            margin:0 auto;
         }
-        .login form{
+        .login .username{
             margin-top:2rem;
         }
         .login button{
+            display: block;
             width:8rem;
             height:1rem;
             color:#fff;
             background:#00f;
             border:none;
             border-radius: 0.5rem;
-            margin-left:1rem;
+            margin:0.3rem auto;
             outline: none;    
         }
         .login-title{
@@ -33,16 +34,15 @@
             margin-top:3rem;
         }
     </style>
+    <script src="build/js/jquery.min.js"></script>
     <title>用户登录</title>
 </head>
 <body>
     <div class="login">      
       <div class="login-title">Electronic Data Capture System</div>
-      <form>
-        <input type="text" class="username" placeholder="用户名"/>
-        <input type="text" class="password" placeholder="密码"/>
-        <button class="login-but">登录</button>
-      </form>
+      <input type="text" class="username" placeholder="用户名"/>
+      <input type="text" class="password" placeholder="密码"/>
+      <button class="login-but">登录</button>
     </div>
     <script>
         //使用rem布局监听窗口大小变化
@@ -59,6 +59,29 @@
             };
         window.addEventListener(resizeEvt, recalc, false);
         document.addEventListener('DOMContentLoaded', recalc, false);
+        $('.login-but').on('click',function(){
+            var url = "http://ecollect-31-service.tmtest.cn/api/User/UserLogin";
+            _header = {"SessionKey":"7556d67f-eaf6-4636-becb-6750734323fb","ActionName":"PatientCRF_ItemOperate_Edit","Language":"chs","SignValue":"","EquipmentCode":"12","IsManagerRequest":false,"IP":"61.164.218.70"}
+            $.ajax({
+                url:url,
+                type: 'POST',
+                dataType:"json",
+                data: {
+                    "UserName": "gaiwj",
+                    "PassWord": "gai123456"
+                },
+                headers: {
+                    "contentType":"application/x-www-form-urlencoded",
+                    ApiHeader: JSON.stringify(_header)
+                }, 
+                success: function (returndata) {
+                    console.log(returndata);
+                },
+                error: function (returndata) {
+                    console.log(returndata);
+                }
+            });
+        })
     </script>
 </body>
 </html>
