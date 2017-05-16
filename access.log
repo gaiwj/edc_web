@@ -1,0 +1,3 @@
+::ffff:127.0.0.1 - - [16/May/2017:06:18:19 +0000] "GET /login.html HTTP/1.1" 200 -
+::ffff:127.0.0.1 - - [16/May/2017:06:18:19 +0000] "GET /js/jquery.min.js HTTP/1.1" 200 -
+::ffff:127.0.0.1 - - [16/May/2017:06:18:52 +0000] "POST /User/Login HTTP/1.1" 200 334
