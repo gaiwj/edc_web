@@ -1,7 +1,7 @@
-.group{
+.centra{
     margin-top:0.2rem;
 }
-.g-list{
+.c-list{
     background: #fff;
     font-size:0.4rem;
     margin-top:0.2rem;
@@ -10,13 +10,14 @@
         padding:0 0.1rem;
         border-bottom: 1px solid #eee;
         span{
-            flex:1;
+            flex:7;
             text-align: center;
             line-height: 1rem;
             color:#666;
         }
         .color-blue{
             color:#06f;
+            flex:4
         }
     }
 }

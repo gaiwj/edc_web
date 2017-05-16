@@ -2,7 +2,7 @@ module.exports = {
     entry: './src/index.jsx',
     output: {
         path: __dirname,
-        filename: 'build.js'
+        filename: './build/js/build.js'
     },
     module: {
         loaders: [
