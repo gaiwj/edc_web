@@ -29,9 +29,11 @@ html,body,#app,.app{
         border-right: 1px solid #fff;
         text-align: center;
         border-bottom:3px solid #fff;
+        line-height: 1.2rem;
         a{
             display: block;
             line-height: 1.2rem;
+            height: 1.2rem;
             text-decoration: none;
             color:#999;
         }
@@ -43,4 +45,6 @@ html,body,#app,.app{
 }
 .content{
     flex:1;
+    overflow-x:auto; 
+    background:#eee;
 }
