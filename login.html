@@ -60,20 +60,20 @@
         window.addEventListener(resizeEvt, recalc, false);
         document.addEventListener('DOMContentLoaded', recalc, false);
         $('.login-but').on('click',function(){
-            var url = "http://ecollect-31-service.tmtest.cn/api/User/UserLogin";
-            _header = {"SessionKey":"7556d67f-eaf6-4636-becb-6750734323fb","ActionName":"PatientCRF_ItemOperate_Edit","Language":"chs","SignValue":"","EquipmentCode":"12","IsManagerRequest":false,"IP":"61.164.218.70"}
+            //var url = "http://ecollect-31-service.tmtest.cn/api/User/UserLogin";
+            //_header = {"SessionKey":"7556d67f-eaf6-4636-becb-6750734323fb","ActionName":"PatientCRF_ItemOperate_Edit","Language":"chs","SignValue":"","EquipmentCode":"12","IsManagerRequest":false,"IP":"61.164.218.70"}
             $.ajax({
-                url:url,
+                url:"/User/Login",
                 type: 'POST',
                 dataType:"json",
                 data: {
                     "UserName": "gaiwj",
                     "PassWord": "gai123456"
                 },
-                headers: {
+                /*headers: {
                     "contentType":"application/x-www-form-urlencoded",
                     ApiHeader: JSON.stringify(_header)
-                }, 
+                }, */
                 success: function (returndata) {
                     console.log(returndata);
                 },
