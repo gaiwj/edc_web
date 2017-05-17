@@ -7,7 +7,7 @@ import CentraList from  './components/centraList/CentraList.jsx';
 import CentralProgress from  './components/centralProgress/CentralProgress.jsx';
 import GroupSchedule from  './components/groupSchedule/GroupSchedule.jsx';
 import SubjectsList from  './components/subjectsList/SubjectsList.jsx';
-import Login from './components/login/Login.jsx';
+import Logout from './components/logout/Logout.jsx';
 import './style/common.scss';
 class App extends React.Component{
     constructor(props){
@@ -27,7 +27,8 @@ class App extends React.Component{
                   </ul>
                   <div className="content">
                     {this.props.children}
-                  </div>
+                    <Logout/>
+                  </div> 
                </div>
     }
     componentDidMount(){

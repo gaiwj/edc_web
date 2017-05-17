@@ -13,7 +13,7 @@ html,body,#app,.app{
     flex-direction: column;
 }
 .header{
-    background:#06f;
+    background:#538EF2;
     text-align: center;
     color:#fff;
     height:1.2rem;
@@ -38,7 +38,7 @@ html,body,#app,.app{
             color:#999;
         }
         .current{
-            border-bottom:3px solid #06f;
+            border-bottom:3px solid #538EF2;
             color:#000;
         }
     }
@@ -47,4 +47,5 @@ html,body,#app,.app{
     flex:1;
     overflow-x:auto; 
     background:#eee;
+    padding-bottom:1.6rem;
 }

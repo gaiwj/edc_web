@@ -13,3 +13,22 @@
         border:none
     }
 }
+.cp-list{
+    background: #fff;
+    font-size:0.4rem;
+    margin-top:0.2rem;
+    li{
+        display: flex;
+        padding:0 0.1rem;
+        border-bottom: 1px solid #eee;
+        span{
+            flex:1;
+            text-align: center;
+            line-height: 1rem;
+            color:#666;
+        }
+        .color-blue{
+            color:#06f;
+        }
+    }
+}

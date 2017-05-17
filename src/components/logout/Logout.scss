@@ -1,0 +1,44 @@
+.logout{
+    width:100%;
+    height: 1.2rem;
+    line-height: 1.2rem;
+    font-size:0.4rem;
+    text-align: center;
+    background:#3291FF;
+    color:#fff;
+    position: absolute;
+    bottom:0;
+}
+.def-box{
+    width:5rem;
+    height:3rem;
+    position: absolute;
+    top:7rem;
+    left:2.5rem;
+    background:#fff;
+    border:1px solid #999;
+    border-radius: 5px;
+    display: none;
+    p{
+        font-size:0.4rem;
+        line-height: 1.3rem;
+        text-align: center;
+    }
+    button{
+        outline: none;
+        border:1px solid #999;
+        background:#fff;
+        width:1.5rem;
+        height:0.8rem;
+        border-radius: 3px;
+    }
+    .left-but{
+        background: #169BD5;
+        border:none;
+        margin-left:0.7rem;
+        color:#fff;
+    }
+    .right-but{
+        margin-left:0.6rem;
+    }
+}
