@@ -51,9 +51,7 @@
                         "PassWord": pwdIpt.value
                     },
                     success: function (returndata) {
-                        console.log(returndata);
                         if(returndata.Code===0){
-                            console.log(returndata.Body.Projects[0].Id,returndata.Body.Projects[0].CompanyId);
                             $.ajax({
                                 url:"/User/LoginProject",
                                 type: 'POST',
@@ -64,22 +62,30 @@
                                     IsManager : 3,
                                 },
                                 success:function(data){
-                                    console.log(data);
                                     //保存医院ID
-                                    var hospitals = JSON.stringify(data.Body.SystemEnvironmentItems[2].Hospitals);
-                                    localStorage.setItem('hospitals',hospitals);
-                                    $.ajax({
-                                        url:"/User/LoginEnvironment",
-                                        type:'POST',
-                                        dataType:"json",
-                                        data:{
-                                            EnvironmentId:data.Body.SystemEnvironmentItems[2].Id,
-                                            HospitalId:data.Body.SystemEnvironmentItems[2].Hospitals[0].Id,
-                                        },
-                                        success(data){
-                                            window.location.href="index.html";
-                                        }
-                                    });
+                                    var Environment = data.Body.SystemEnvironmentItems;
+                                    if(Array.isArray(Environment)){
+                                        var hospitals = JSON.stringify(Environment[2].Hospitals);
+                                        localStorage.setItem('hospitals',hospitals);
+                                        $.ajax({
+                                            url:"/User/LoginEnvironment",
+                                            type:'POST',
+                                            dataType:"json",
+                                            data:{
+                                                EnvironmentId:Environment[2].Id,
+                                                HospitalId:Environment[2].Hospitals[0].Id,
+                                            },
+                                            success(data){
+                                                window.location.href="index.html";
+                                            }
+                                        });
+                                    }else{
+                                        loginBut.innerHTML = "登录";
+                                        loginBut.disabled=false;
+                                        iError.style.visibility = "visible";
+                                        iError.innerHTML = "未知错误";
+                                    }
+                                    
                                 }
 
                             })

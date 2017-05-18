@@ -13197,13 +13197,6 @@ var CentralProgress = function (_React$Component) {
             }),
             num: [],
             data: []
-            // data:[{
-            //         name: 'Firefox',
-            //         y: 42.8,
-            //         sliced: true,
-            //         selected: true
-            //         },
-            //     ]
         };
         return _this2;
     }
@@ -13320,6 +13313,10 @@ var CentralProgress = function (_React$Component) {
                         title: {
                             text: null
                         },
+                        tooltip: {
+                            headerFormat: '{series.name}<br>',
+                            pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+                        },
                         legend: {
                             align: 'left',
                             verticalAlign: 'top',
@@ -13411,10 +13408,9 @@ var GroupSchedule = function (_React$Component) {
         var _this2 = _possibleConstructorReturn(this, (GroupSchedule.__proto__ || Object.getPrototypeOf(GroupSchedule)).call(this, props));
 
         _this2.state = {
-            data: [],
-            planGroup: [30, 20, 40, 21, 32, 21, 25],
+            planGroup: [2, 4, 11, 23, 37, 52, 67, 82, 101, 116, 116, 135, 150],
             ActualGroup: [],
-            month: []
+            month: ['Apr-17', 'May-17', 'Jun-17', 'Jul-17', 'Aug-17', 'Sep-17', 'Oct-17', 'Nov-17', 'Dec-17', 'jan-18', 'Feb-18', 'Mar-18', 'Apr-18']
         };
 
         return _this2;
@@ -13424,32 +13420,29 @@ var GroupSchedule = function (_React$Component) {
         key: 'render',
         value: function render() {
             var list = [],
+                _this = this,
                 Pg = this.state.planGroup;
-            Array.isArray(this.state.data) ? this.state.data.forEach(function (v, i) {
+            Pg.forEach(function (v, i) {
                 list.push(_react2.default.createElement(
                     'li',
                     { key: i },
                     _react2.default.createElement(
                         'span',
                         { className: 'color-blue' },
-                        v.month
+                        _this.state.month[i]
                     ),
                     _react2.default.createElement(
                         'span',
                         null,
-                        Pg[i]
+                        v
                     ),
                     _react2.default.createElement(
                         'span',
                         null,
-                        v.groupNum
+                        _this.state.ActualGroup[i]
                     )
                 ));
-            }) : list = _react2.default.createElement(
-                'li',
-                null,
-                '\u6682\u65E0\u6570\u636E'
-            );
+            });
             return _react2.default.createElement(
                 'div',
                 null,
@@ -13490,18 +13483,13 @@ var GroupSchedule = function (_React$Component) {
                 dataType: "json",
                 success: function success(data) {
                     if (data.Code === 0) {
-                        var Ag = [],
-                            month = [];
-                        var pList = data.Body.GroupProgressListItems,
-                            data;
+                        var Ag = [];
+                        var pList = data.Body.GroupProgressListItems;
                         Array.isArray(pList) ? pList.forEach(function (v, i) {
                             Ag.push(v.groupNum);
-                            month.push(v.month);
                         }) : undefined;
                         _this.setState({
-                            ActualGroup: Ag,
-                            month: month,
-                            data: pList
+                            ActualGroup: Ag
                         });
                         start();
                     } else {
@@ -13527,7 +13515,14 @@ var GroupSchedule = function (_React$Component) {
                             }
                         },
                         xAxis: {
-                            categories: _this.state.month
+                            categories: _this.state.month,
+                            type: 'category',
+                            labels: {
+                                style: {
+                                    fontSize: '13px',
+                                    fontFamily: 'Verdana, sans-serif'
+                                }
+                            }
                         },
                         yAxis: {
                             title: {
@@ -13668,6 +13663,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+//console
 var Logout = function (_React$Component) {
     _inherits(Logout, _React$Component);
 
@@ -13732,9 +13728,7 @@ var Logout = function (_React$Component) {
                     url: "/User/LoginOut",
                     type: 'GET',
                     dataType: "json",
-                    success: function success(data) {
-                        console.log(data);
-                    }
+                    success: function success(data) {}
                 });
                 window.location.href = "login.html";
             };
@@ -13774,6 +13768,8 @@ __webpack_require__(261);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -13806,7 +13802,8 @@ var SubjectsList = function (_React$Component) {
         value: function render() {
             var hospitalList = [],
                 list = [],
-                _this = this;
+                _this = this,
+                more = '';
             this.state.hospitals.forEach(function (v, i) {
                 hospitalList.push(_react2.default.createElement(
                     'option',
@@ -13818,7 +13815,7 @@ var SubjectsList = function (_React$Component) {
                 'li',
                 null,
                 '\u6682\u65E0\u6570\u636E\uFF01'
-            ) : this.state.data.forEach(function (v, i) {
+            ) : this.state.data.forEach(function (v, i, arr) {
                 list.push(_react2.default.createElement(
                     'li',
                     { key: i },
@@ -13848,6 +13845,11 @@ var SubjectsList = function (_React$Component) {
                         v.PatientStatus
                     )
                 ));
+                more = arr.length >= 10 ? _react2.default.createElement(
+                    'button',
+                    { className: 'more' },
+                    '\u83B7\u53D6\u66F4\u591A'
+                ) : '';
             });
             return _react2.default.createElement(
                 'div',
@@ -13898,7 +13900,12 @@ var SubjectsList = function (_React$Component) {
                             '\u72B6\u6001'
                         )
                     ),
-                    list
+                    list,
+                    _react2.default.createElement(
+                        'li',
+                        { id: 'more' },
+                        more
+                    )
                 )
             );
         }
@@ -13910,24 +13917,43 @@ var SubjectsList = function (_React$Component) {
             getData(iSelect.options[iSelect.selectedIndex].value);
             iSelect.onchange = function () {
                 var id = this.options[this.selectedIndex].value;
+                _this.state.data = [];
                 getData(id);
             };
-            function getData(id) {
+            document.getElementById('more').onclick = function (ev) {
+                ev.target.innerHTML = "正在获取...";
+                ev.target.style.color = "#999999";
+                ev.target.disabled = true;
+                getData(iSelect.options[iSelect.selectedIndex].value, function () {
+                    ev.target.innerHTML = "获取更多";
+                    ev.target.style.color = "#3291FF";
+                    ev.target.disabled = false;
+                }, function () {
+                    ev.target.innerHTML = "没有更多数据了~";
+                    ev.target.style.color = "#999999";
+                    ev.target.disabled = true;
+                });
+            };
+            function getData(id, fun1, fun2) {
                 $.ajax({
                     url: "/RUIJIESIYUAN/GetPatientList",
                     type: 'POST',
                     dataType: "json",
                     data: {
                         IdHospital: id,
-                        PageIndex: 1,
-                        PageSize: 3
+                        PageIndex: Math.floor(_this.state.data.length / 10),
+                        PageSize: 10
                     },
                     success: function success(data) {
-                        console.log(data);
                         if (data.Code === 0) {
-                            _this.setState({
-                                data: data.Body.PatientByHospitalListItems
-                            });
+                            if (data.Body.PatientByHospitalListItems) {
+                                _this.setState({
+                                    data: [].concat(_toConsumableArray(_this.state.data), _toConsumableArray(data.Body.PatientByHospitalListItems))
+                                });
+                                fun1 ? fun1() : '';
+                            } else {
+                                fun2 ? fun2() : '';
+                            }
                         } else {}
                     }
                 });
@@ -14824,7 +14850,7 @@ exports = module.exports = __webpack_require__(25)(undefined);
 
 
 // module
-exports.push([module.i, ".group {\n  margin-top: 0.2rem; }\n\n.g-list {\n  background: #fff;\n  font-size: 0.4rem;\n  margin-top: 0.2rem; }\n  .g-list li {\n    display: flex;\n    padding: 0 0.1rem;\n    border-bottom: 1px solid #eee;\n    line-height: 1rem;\n    color: #666; }\n    .g-list li span {\n      flex: 1;\n      text-align: center;\n      line-height: 1rem;\n      color: #666; }\n    .g-list li .color-blue {\n      color: #06f; }\n", ""]);
+exports.push([module.i, ".group {\n  margin-top: 0.2rem; }\n\n.g-list {\n  background: #fff;\n  font-size: 0.4rem;\n  margin-top: 0.2rem; }\n  .g-list li {\n    display: flex;\n    padding: 0 0.1rem;\n    border-bottom: 1px solid #eee;\n    line-height: 1rem;\n    height: 1rem;\n    color: #666; }\n    .g-list li span {\n      flex: 1;\n      text-align: center;\n      line-height: 1rem;\n      color: #666; }\n    .g-list li .color-blue {\n      color: #06f; }\n", ""]);
 
 // exports
 
@@ -14852,7 +14878,7 @@ exports = module.exports = __webpack_require__(25)(undefined);
 
 
 // module
-exports.push([module.i, ".s-list {\n  font-size: 0.4rem;\n  background: #fff; }\n  .s-list li {\n    display: flex;\n    padding: 0 0.1rem;\n    border-bottom: 1px solid #eee;\n    line-height: 1.2rem;\n    text-align: center;\n    color: #666; }\n    .s-list li span {\n      text-align: center;\n      line-height: 1.2rem;\n      color: #666; }\n    .s-list li span:nth-of-type(1) {\n      color: #06f;\n      flex: 4; }\n    .s-list li span:nth-of-type(2) {\n      flex: 2; }\n    .s-list li span:nth-of-type(3) {\n      flex: 3; }\n    .s-list li span:nth-of-type(4) {\n      flex: 6; }\n      .s-list li span:nth-of-type(4) p {\n        line-height: 0.6rem; }\n    .s-list li span:nth-of-type(5) {\n      flex: 3; }\n\n.su-select {\n  display: block;\n  width: 100%;\n  height: 1.4rem;\n  background: #eee;\n  outline: none;\n  border: none;\n  text-align: center; }\n  .su-select option {\n    outline: none;\n    border: none;\n    text-align: center;\n    border: none; }\n", ""]);
+exports.push([module.i, ".s-list {\n  font-size: 0.4rem;\n  background: #fff; }\n  .s-list li {\n    display: flex;\n    padding: 0 0.1rem;\n    border-bottom: 1px solid #eee;\n    line-height: 1.2rem;\n    text-align: center;\n    color: #666; }\n    .s-list li span {\n      text-align: center;\n      line-height: 1.2rem;\n      color: #666; }\n    .s-list li span:nth-of-type(1) {\n      color: #06f;\n      flex: 4; }\n    .s-list li span:nth-of-type(2) {\n      flex: 2; }\n    .s-list li span:nth-of-type(3) {\n      flex: 3; }\n    .s-list li span:nth-of-type(4) {\n      flex: 6; }\n      .s-list li span:nth-of-type(4) p {\n        line-height: 0.6rem; }\n    .s-list li span:nth-of-type(5) {\n      flex: 3; }\n\n.su-select {\n  display: block;\n  width: 100%;\n  height: 1.4rem;\n  background: #eee;\n  outline: none;\n  border: none;\n  text-align: center; }\n  .su-select option {\n    outline: none;\n    border: none;\n    text-align: center;\n    border: none; }\n\n.more {\n  display: block;\n  outline: none;\n  width: 100%;\n  border: none;\n  background: #fff;\n  line-height: 1.4rem;\n  color: #3291FF; }\n", ""]);
 
 // exports
 

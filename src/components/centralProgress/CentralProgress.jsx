@@ -9,13 +9,6 @@ class CentralProgress extends React.Component{
             hospitalID:JSON.parse(localStorage.getItem('hospitals')).map((v)=>v.Id),
             num:[],
             data:[]
-            // data:[{
-            //         name: 'Firefox',
-            //         y: 42.8,
-            //         sliced: true,
-            //         selected: true
-            //         },
-            //     ]
         }	
 	}  
     render(){
@@ -87,6 +80,10 @@ class CentralProgress extends React.Component{
                     },
                     title: {
                         text: null
+                    },
+                    tooltip: {
+                        headerFormat: '{series.name}<br>',
+                        pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
                     },
                     legend: {
                         align: 'left',

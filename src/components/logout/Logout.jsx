@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './Logout.scss';
-
+        //console
 class Logout extends React.Component{
     render(){
         return (<div>
@@ -39,7 +39,7 @@ class Logout extends React.Component{
                 type:'GET',
                 dataType:"json",
                 success(data){
-                    console.log(data); 
+                    
                 }
             });
             window.location.href="login.html";

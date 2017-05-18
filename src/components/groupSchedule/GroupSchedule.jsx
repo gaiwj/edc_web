@@ -5,19 +5,19 @@ class GroupSchedule extends React.Component{
     constructor(props){
 		super(props);
 		this.state = {
-            data:[],
-            planGroup:[30, 20, 40, 21, 32, 21, 25],
+            planGroup:[2, 4, 11, 23, 37, 52, 67,82,101,116,116,135,150],
             ActualGroup:[],
-            month:[],
+            month:['Apr-17','May-17','Jun-17','Jul-17','Aug-17','Sep-17','Oct-17','Nov-17','Dec-17','jan-18','Feb-18','Mar-18','Apr-18'],
 		}
 		
 	}
     render(){
         var list = [],
+            _this = this,
             Pg = this.state.planGroup;
-        Array.isArray(this.state.data)?this.state.data.forEach(function(v,i){
-            list.push(<li key={i}><span className="color-blue">{v.month}</span><span>{Pg[i]}</span><span>{v.groupNum}</span></li>)
-        }):list=<li>暂无数据</li>;
+        Pg.forEach(function(v,i){
+            list.push(<li key={i}><span className="color-blue">{_this.state.month[i]}</span><span>{v}</span><span>{_this.state.ActualGroup[i]}</span></li>)
+        });
         return <div>
                     <div id="container" className="group"></div>
                     <ul className="g-list">
@@ -34,17 +34,13 @@ class GroupSchedule extends React.Component{
             dataType:"json",
             success(data){
                 if(data.Code===0){
-                    var Ag = [],
-                    month = [];
-                    var pList = data.Body.GroupProgressListItems,data;
+                    var Ag = [];
+                    var pList = data.Body.GroupProgressListItems;
                     Array.isArray(pList)?pList.forEach(function(v,i){
                         Ag.push(v.groupNum);
-                        month.push(v.month);
                     }):undefined;
                     _this.setState({
                         ActualGroup:Ag,
-                        month:month,
-                        data:pList
                     });
                     start();
                 }else{
@@ -71,7 +67,14 @@ class GroupSchedule extends React.Component{
                         }
                     },
                     xAxis: {
-                        categories: _this.state.month
+                        categories: _this.state.month,
+                        type: 'category',
+                        labels: {
+                            style: {
+                                fontSize: '13px',
+                                fontFamily: 'Verdana, sans-serif'
+                            }
+                        }
                     },
                     yAxis: {
                         title: {
