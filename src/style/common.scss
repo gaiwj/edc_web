@@ -28,7 +28,6 @@ html,body,#app,.app{
         font-size:0.4rem;
         border-right: 1px solid #fff;
         text-align: center;
-        border-bottom:3px solid #fff;
         line-height: 1.2rem;
         a{
             display: block;
@@ -36,6 +35,7 @@ html,body,#app,.app{
             height: 1.2rem;
             text-decoration: none;
             color:#999;
+            border-bottom:3px solid #fff;
         }
         .current{
             border-bottom:3px solid #538EF2;

@@ -17,6 +17,10 @@ class App extends React.Component{
         }
     }
     render(){
+        if(document.cookie===''){
+            window.location.href="login.html";
+            return undefined;
+        }
         return <div className="app">
                   <Header/>
                   <ul className="projectList">

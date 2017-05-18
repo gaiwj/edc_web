@@ -7,6 +7,7 @@ class CentralProgress extends React.Component{
 		this.state = {
             hospitals:JSON.parse(localStorage.getItem('hospitals')).map((v)=>v.Name),
             hospitalID:JSON.parse(localStorage.getItem('hospitals')).map((v)=>v.Id),
+            num:[],
             data:[]
             // data:[{
             //         name: 'Firefox',
@@ -25,7 +26,7 @@ class CentralProgress extends React.Component{
         });
         var list = [];
         this.state.data.forEach((v,i)=>{
-            list.push(<li key={i}><span className="color-blue">{v.name}</span><span>{v.y}</span></li>)
+            list.push(<li key={i}><span className="color-blue">{v.name}</span><span>{_this.state.num[i]}</span></li>)
         });
         return <div>
                     <div>
@@ -58,11 +59,16 @@ class CentralProgress extends React.Component{
                 },
                 success(data){
                     if(data.Code===0){
-                        var temp = []
-                        data.Body.SiteProgressListItems.forEach(function(v,i){
-                            temp.push({name:v.statusName,y:v.patientNum});
+                        var temp = [],
+                            numTemp=[];
+                        data.Body.SiteProgressListItems.forEach(function(v,i,arr){
+                            var per = v.patientNum/arr.reduce(function(previous,current){
+                                return previous+current.patientNum;
+                            },0)*100;
+                            numTemp.push(v.patientNum);
+                            temp.push({name:v.statusName,y:per});
                         });
-                        _this.setState({data:temp})
+                        _this.setState({data:temp,num:numTemp});
                         start();
                     }else{
                         window.location.href="login.html";
@@ -82,19 +88,33 @@ class CentralProgress extends React.Component{
                     title: {
                         text: null
                     },
-                    tooltip: {
-                        headerFormat: '{series.name}<br>',
-                        pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
-                    },
-                    plotOptions: {
-                        pie: {
-                            allowPointSelect: true,
-                            cursor: 'pointer',
-                            dataLabels: {
-                                enabled: false
-                            },
-                            showInLegend: true
+                    legend: {
+                        align: 'left',
+                        verticalAlign: 'top',
+                        x: 0,
+                        y: -10,
+                        itemStyle: {
+                            color: '#999999',   
                         }
+                    },
+                    plotOptions:{  
+                        pie: {  
+                            allowPointSelect: true, //选中某块区域是否允许分离  
+                            cursor: 'pointer',  
+                            dataLabels: {  
+								distance:15,
+								formatter:function(){
+									return this.y+'%';
+								},
+								enabled:true,
+								style:{
+									fontSize:15,
+									color:'#999999'
+								}
+							}, 
+                            showInLegend: true 
+                            
+                        }  
                     },
                     series: [{
                         type: 'pie',

@@ -15,9 +15,9 @@ class GroupSchedule extends React.Component{
     render(){
         var list = [],
             Pg = this.state.planGroup;
-        this.state.data.forEach(function(v,i){
+        Array.isArray(this.state.data)?this.state.data.forEach(function(v,i){
             list.push(<li key={i}><span className="color-blue">{v.month}</span><span>{Pg[i]}</span><span>{v.groupNum}</span></li>)
-        })
+        }):list=<li>暂无数据</li>;
         return <div>
                     <div id="container" className="group"></div>
                     <ul className="g-list">
@@ -36,14 +36,15 @@ class GroupSchedule extends React.Component{
                 if(data.Code===0){
                     var Ag = [],
                     month = [];
-                    data.Body.GroupProgressListItems.forEach(function(v,i){
+                    var pList = data.Body.GroupProgressListItems,data;
+                    Array.isArray(pList)?pList.forEach(function(v,i){
                         Ag.push(v.groupNum);
                         month.push(v.month);
-                    });
+                    }):undefined;
                     _this.setState({
                         ActualGroup:Ag,
                         month:month,
-                        data:data.Body.GroupProgressListItems
+                        data:pList
                     });
                     start();
                 }else{
@@ -77,6 +78,7 @@ class GroupSchedule extends React.Component{
                             text: null
                         }
                     },
+                    // 图例
                     legend: {
                         align: 'right',
                         verticalAlign: 'top',
@@ -84,14 +86,15 @@ class GroupSchedule extends React.Component{
                         y: 0,
                         itemStyle: {
                             color: '#999999',   
-                        }
+                        },
+                        squareSymbol:true,
                     },
                     plotOptions: {
                         line: {
                             enableMouseTracking: false // 关闭鼠标跟踪，对应的提示框、点击事件会失效
                         },
                     },
-                    colors:['#EDB22C','#66A9E4'],
+                    colors:['#F5D17E','#ABD1F2'],
                     //去除水印
                     credits: {
                         enabled:false

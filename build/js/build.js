@@ -13077,7 +13077,7 @@ var CentraList = function (_React$Component) {
                     if (data.Code === 0) {
                         var temp = [];
                         data.Body.SiteListItems.forEach(function (v, i) {
-                            temp[i] = [v.HospitalName, v.PatientNum];
+                            temp[i] = [v.Code, v.PatientNum];
                         });
                         _this.setState({
                             data: data.Body.SiteListItems,
@@ -13097,28 +13097,32 @@ var CentraList = function (_React$Component) {
                             height: 240
                         },
                         title: {
-                            text: '受试者数量'
+                            text: null
                         },
                         xAxis: {
                             type: 'category',
                             labels: {
-                                rotation: -45,
                                 style: {
                                     fontSize: '13px',
                                     fontFamily: 'Verdana, sans-serif'
                                 }
                             }
                         },
+                        colors: ['#F5AB30'],
+                        // 图例
+                        legend: {
+                            align: 'left',
+                            verticalAlign: 'top',
+                            x: 0,
+                            y: -10,
+                            itemStyle: {
+                                color: '#999999'
+                            }
+                        },
                         yAxis: {
                             min: 0,
                             title: null
                         },
-                        legend: {
-                            enabled: false
-                        },
-                        // tooltip: {
-                        //     pointFormat: '人口总量: <b>{point.y:.1f} 百万</b>'
-                        // },
                         //去除水印
                         credits: {
                             enabled: false
@@ -13128,7 +13132,7 @@ var CentraList = function (_React$Component) {
                             enabled: false
                         },
                         series: [{
-                            name: '总人口',
+                            name: '受试者人数',
                             data: _this.state.treeData,
                             dataLabels: {
                                 enabled: true
@@ -13191,6 +13195,7 @@ var CentralProgress = function (_React$Component) {
             hospitalID: JSON.parse(localStorage.getItem('hospitals')).map(function (v) {
                 return v.Id;
             }),
+            num: [],
             data: []
             // data:[{
             //         name: 'Firefox',
@@ -13228,7 +13233,7 @@ var CentralProgress = function (_React$Component) {
                     _react2.default.createElement(
                         'span',
                         null,
-                        v.y
+                        _this.state.num[i]
                     )
                 ));
             });
@@ -13286,11 +13291,16 @@ var CentralProgress = function (_React$Component) {
                     },
                     success: function success(data) {
                         if (data.Code === 0) {
-                            var temp = [];
-                            data.Body.SiteProgressListItems.forEach(function (v, i) {
-                                temp.push({ name: v.statusName, y: v.patientNum });
+                            var temp = [],
+                                numTemp = [];
+                            data.Body.SiteProgressListItems.forEach(function (v, i, arr) {
+                                var per = v.patientNum / arr.reduce(function (previous, current) {
+                                    return previous + current.patientNum;
+                                }, 0) * 100;
+                                numTemp.push(v.patientNum);
+                                temp.push({ name: v.statusName, y: per });
                             });
-                            _this.setState({ data: temp });
+                            _this.setState({ data: temp, num: numTemp });
                             start();
                         } else {
                             window.location.href = "login.html";
@@ -13310,18 +13320,32 @@ var CentralProgress = function (_React$Component) {
                         title: {
                             text: null
                         },
-                        tooltip: {
-                            headerFormat: '{series.name}<br>',
-                            pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+                        legend: {
+                            align: 'left',
+                            verticalAlign: 'top',
+                            x: 0,
+                            y: -10,
+                            itemStyle: {
+                                color: '#999999'
+                            }
                         },
                         plotOptions: {
                             pie: {
-                                allowPointSelect: true,
+                                allowPointSelect: true, //选中某块区域是否允许分离  
                                 cursor: 'pointer',
                                 dataLabels: {
-                                    enabled: false
+                                    distance: 15,
+                                    formatter: function formatter() {
+                                        return this.y + '%';
+                                    },
+                                    enabled: true,
+                                    style: {
+                                        fontSize: 15,
+                                        color: '#999999'
+                                    }
                                 },
                                 showInLegend: true
+
                             }
                         },
                         series: [{
@@ -13401,7 +13425,7 @@ var GroupSchedule = function (_React$Component) {
         value: function render() {
             var list = [],
                 Pg = this.state.planGroup;
-            this.state.data.forEach(function (v, i) {
+            Array.isArray(this.state.data) ? this.state.data.forEach(function (v, i) {
                 list.push(_react2.default.createElement(
                     'li',
                     { key: i },
@@ -13421,7 +13445,11 @@ var GroupSchedule = function (_React$Component) {
                         v.groupNum
                     )
                 ));
-            });
+            }) : list = _react2.default.createElement(
+                'li',
+                null,
+                '\u6682\u65E0\u6570\u636E'
+            );
             return _react2.default.createElement(
                 'div',
                 null,
@@ -13464,14 +13492,16 @@ var GroupSchedule = function (_React$Component) {
                     if (data.Code === 0) {
                         var Ag = [],
                             month = [];
-                        data.Body.GroupProgressListItems.forEach(function (v, i) {
+                        var pList = data.Body.GroupProgressListItems,
+                            data;
+                        Array.isArray(pList) ? pList.forEach(function (v, i) {
                             Ag.push(v.groupNum);
                             month.push(v.month);
-                        });
+                        }) : undefined;
                         _this.setState({
                             ActualGroup: Ag,
                             month: month,
-                            data: data.Body.GroupProgressListItems
+                            data: pList
                         });
                         start();
                     } else {
@@ -13504,6 +13534,7 @@ var GroupSchedule = function (_React$Component) {
                                 text: null
                             }
                         },
+                        // 图例
                         legend: {
                             align: 'right',
                             verticalAlign: 'top',
@@ -13511,14 +13542,15 @@ var GroupSchedule = function (_React$Component) {
                             y: 0,
                             itemStyle: {
                                 color: '#999999'
-                            }
+                            },
+                            squareSymbol: true
                         },
                         plotOptions: {
                             line: {
                                 enableMouseTracking: false // 关闭鼠标跟踪，对应的提示框、点击事件会失效
                             }
                         },
-                        colors: ['#EDB22C', '#66A9E4'],
+                        colors: ['#F5D17E', '#ABD1F2'],
                         //去除水印
                         credits: {
                             enabled: false
@@ -13696,6 +13728,14 @@ var Logout = function (_React$Component) {
                     }
                 })();
                 defBox.style.display = "none";
+                $.ajax({
+                    url: "/User/LoginOut",
+                    type: 'GET',
+                    dataType: "json",
+                    success: function success(data) {
+                        console.log(data);
+                    }
+                });
                 window.location.href = "login.html";
             };
             document.querySelector('.right-but').onclick = function () {
@@ -13746,32 +13786,76 @@ var SubjectsList = function (_React$Component) {
     function SubjectsList(props) {
         _classCallCheck(this, SubjectsList);
 
-        var _this = _possibleConstructorReturn(this, (SubjectsList.__proto__ || Object.getPrototypeOf(SubjectsList)).call(this, props));
+        var _this2 = _possibleConstructorReturn(this, (SubjectsList.__proto__ || Object.getPrototypeOf(SubjectsList)).call(this, props));
 
-        _this.state = {};
+        _this2.state = {
+            hospitals: JSON.parse(localStorage.getItem('hospitals')).map(function (v) {
+                return v.Name;
+            }),
+            hospitalID: JSON.parse(localStorage.getItem('hospitals')).map(function (v) {
+                return v.Id;
+            }),
+            data: []
+        };
 
-        return _this;
+        return _this2;
     }
 
     _createClass(SubjectsList, [{
         key: 'render',
         value: function render() {
+            var hospitalList = [],
+                list = [],
+                _this = this;
+            this.state.hospitals.forEach(function (v, i) {
+                hospitalList.push(_react2.default.createElement(
+                    'option',
+                    { key: i, value: _this.state.hospitalID[i] },
+                    v
+                ));
+            });
+            !Array.isArray(this.state.data) ? list = _react2.default.createElement(
+                'li',
+                null,
+                '\u6682\u65E0\u6570\u636E\uFF01'
+            ) : this.state.data.forEach(function (v, i) {
+                list.push(_react2.default.createElement(
+                    'li',
+                    { key: i },
+                    _react2.default.createElement(
+                        'span',
+                        { className: 'color-blue' },
+                        v.Code
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        v.SEX
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        v['受试者随机号']
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        v.zhiqingtongyi
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        null,
+                        v.PatientStatus
+                    )
+                ));
+            });
             return _react2.default.createElement(
                 'div',
                 null,
                 _react2.default.createElement(
                     'select',
-                    { name: '', id: '' },
-                    _react2.default.createElement(
-                        'option',
-                        { value: '' },
-                        '\u6E56\u5317\u7B2C\u4E00\u533B\u9662'
-                    ),
-                    _react2.default.createElement(
-                        'option',
-                        { value: '' },
-                        '\u6E56\u5317\u7B2C\u4E8C\u533B\u9662'
-                    )
+                    { name: '', id: '', className: 'su-select' },
+                    hospitalList
                 ),
                 _react2.default.createElement(
                     'ul',
@@ -13813,9 +13897,41 @@ var SubjectsList = function (_React$Component) {
                             null,
                             '\u72B6\u6001'
                         )
-                    )
+                    ),
+                    list
                 )
             );
+        }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this = this,
+                iSelect = document.querySelector('.su-select');
+            getData(iSelect.options[iSelect.selectedIndex].value);
+            iSelect.onchange = function () {
+                var id = this.options[this.selectedIndex].value;
+                getData(id);
+            };
+            function getData(id) {
+                $.ajax({
+                    url: "/RUIJIESIYUAN/GetPatientList",
+                    type: 'POST',
+                    dataType: "json",
+                    data: {
+                        IdHospital: id,
+                        PageIndex: 1,
+                        PageSize: 3
+                    },
+                    success: function success(data) {
+                        console.log(data);
+                        if (data.Code === 0) {
+                            _this.setState({
+                                data: data.Body.PatientByHospitalListItems
+                            });
+                        } else {}
+                    }
+                });
+            }
         }
     }]);
 
@@ -14708,7 +14824,7 @@ exports = module.exports = __webpack_require__(25)(undefined);
 
 
 // module
-exports.push([module.i, ".group {\n  margin-top: 0.2rem; }\n\n.g-list {\n  background: #fff;\n  font-size: 0.4rem;\n  margin-top: 0.2rem; }\n  .g-list li {\n    display: flex;\n    padding: 0 0.1rem;\n    border-bottom: 1px solid #eee; }\n    .g-list li span {\n      flex: 1;\n      text-align: center;\n      line-height: 1rem;\n      color: #666; }\n    .g-list li .color-blue {\n      color: #06f; }\n", ""]);
+exports.push([module.i, ".group {\n  margin-top: 0.2rem; }\n\n.g-list {\n  background: #fff;\n  font-size: 0.4rem;\n  margin-top: 0.2rem; }\n  .g-list li {\n    display: flex;\n    padding: 0 0.1rem;\n    border-bottom: 1px solid #eee;\n    line-height: 1rem;\n    color: #666; }\n    .g-list li span {\n      flex: 1;\n      text-align: center;\n      line-height: 1rem;\n      color: #666; }\n    .g-list li .color-blue {\n      color: #06f; }\n", ""]);
 
 // exports
 
@@ -14736,7 +14852,7 @@ exports = module.exports = __webpack_require__(25)(undefined);
 
 
 // module
-exports.push([module.i, ".s-list {\n  font-size: 0.4rem;\n  background: #fff; }\n  .s-list li {\n    display: flex;\n    padding: 0 0.1rem;\n    border-bottom: 1px solid #eee; }\n    .s-list li span {\n      text-align: center;\n      line-height: 1.2rem;\n      color: #666; }\n    .s-list li span:nth-of-type(1) {\n      color: #06f;\n      flex: 4; }\n    .s-list li span:nth-of-type(2) {\n      flex: 2; }\n    .s-list li span:nth-of-type(3) {\n      flex: 3; }\n    .s-list li span:nth-of-type(4) {\n      flex: 6;\n      line-height: 0.6rem; }\n    .s-list li span:nth-of-type(5) {\n      flex: 3; }\n", ""]);
+exports.push([module.i, ".s-list {\n  font-size: 0.4rem;\n  background: #fff; }\n  .s-list li {\n    display: flex;\n    padding: 0 0.1rem;\n    border-bottom: 1px solid #eee;\n    line-height: 1.2rem;\n    text-align: center;\n    color: #666; }\n    .s-list li span {\n      text-align: center;\n      line-height: 1.2rem;\n      color: #666; }\n    .s-list li span:nth-of-type(1) {\n      color: #06f;\n      flex: 4; }\n    .s-list li span:nth-of-type(2) {\n      flex: 2; }\n    .s-list li span:nth-of-type(3) {\n      flex: 3; }\n    .s-list li span:nth-of-type(4) {\n      flex: 6; }\n      .s-list li span:nth-of-type(4) p {\n        line-height: 0.6rem; }\n    .s-list li span:nth-of-type(5) {\n      flex: 3; }\n\n.su-select {\n  display: block;\n  width: 100%;\n  height: 1.4rem;\n  background: #eee;\n  outline: none;\n  border: none;\n  text-align: center; }\n  .su-select option {\n    outline: none;\n    border: none;\n    text-align: center;\n    border: none; }\n", ""]);
 
 // exports
 
@@ -14750,7 +14866,7 @@ exports = module.exports = __webpack_require__(25)(undefined);
 
 
 // module
-exports.push([module.i, "* {\n  padding: 0;\n  margin: 0; }\n\nul {\n  list-style: none; }\n\nhtml, body, #app, .app {\n  height: 100%; }\n\n.app {\n  display: flex;\n  flex-direction: column; }\n\n.header {\n  background: #538EF2;\n  text-align: center;\n  color: #fff;\n  height: 1.2rem;\n  line-height: 1.2rem;\n  font-size: 0.4rem; }\n\n.projectList {\n  display: flex;\n  border-top: 1px solid #fff; }\n  .projectList li {\n    flex: 1;\n    font-size: 0.4rem;\n    border-right: 1px solid #fff;\n    text-align: center;\n    border-bottom: 3px solid #fff;\n    line-height: 1.2rem; }\n    .projectList li a {\n      display: block;\n      line-height: 1.2rem;\n      height: 1.2rem;\n      text-decoration: none;\n      color: #999; }\n    .projectList li .current {\n      border-bottom: 3px solid #538EF2;\n      color: #000; }\n\n.content {\n  flex: 1;\n  overflow-x: auto;\n  background: #eee;\n  padding-bottom: 1.6rem; }\n", ""]);
+exports.push([module.i, "* {\n  padding: 0;\n  margin: 0; }\n\nul {\n  list-style: none; }\n\nhtml, body, #app, .app {\n  height: 100%; }\n\n.app {\n  display: flex;\n  flex-direction: column; }\n\n.header {\n  background: #538EF2;\n  text-align: center;\n  color: #fff;\n  height: 1.2rem;\n  line-height: 1.2rem;\n  font-size: 0.4rem; }\n\n.projectList {\n  display: flex;\n  border-top: 1px solid #fff; }\n  .projectList li {\n    flex: 1;\n    font-size: 0.4rem;\n    border-right: 1px solid #fff;\n    text-align: center;\n    line-height: 1.2rem; }\n    .projectList li a {\n      display: block;\n      line-height: 1.2rem;\n      height: 1.2rem;\n      text-decoration: none;\n      color: #999;\n      border-bottom: 3px solid #fff; }\n    .projectList li .current {\n      border-bottom: 3px solid #538EF2;\n      color: #000; }\n\n.content {\n  flex: 1;\n  overflow-x: auto;\n  background: #eee;\n  padding-bottom: 1.6rem; }\n", ""]);
 
 // exports
 
@@ -16270,6 +16386,10 @@ var App = function (_React$Component) {
     _createClass(App, [{
         key: 'render',
         value: function render() {
+            if (document.cookie === '') {
+                window.location.href = "login.html";
+                return undefined;
+            }
             return _react2.default.createElement(
                 'div',
                 { className: 'app' },

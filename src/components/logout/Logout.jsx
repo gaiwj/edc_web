@@ -34,6 +34,14 @@ class Logout extends React.Component{
                 }                  
             })();
             defBox.style.display = "none";
+            $.ajax({
+                url:"/User/LoginOut",
+                type:'GET',
+                dataType:"json",
+                success(data){
+                    console.log(data); 
+                }
+            });
             window.location.href="login.html";
         }
         document.querySelector('.right-but').onclick=function(){

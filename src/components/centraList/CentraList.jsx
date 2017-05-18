@@ -33,7 +33,7 @@ class CentraList extends React.Component{
                 if(data.Code===0){
                     var temp = [];
                     data.Body.SiteListItems.forEach(function(v,i){
-                        temp[i]=[v.HospitalName,v.PatientNum];
+                        temp[i]=[v.Code,v.PatientNum];
                     });
                     _this.setState({
                         data:data.Body.SiteListItems,
@@ -53,28 +53,32 @@ class CentraList extends React.Component{
                         height:240,
                     },
                     title: {
-                        text: '受试者数量'
+                        text: null
                     },
                     xAxis: {
                         type: 'category',
                         labels: {
-                            rotation: -45,
                             style: {
                                 fontSize: '13px',
                                 fontFamily: 'Verdana, sans-serif'
                             }
                         }
                     },
+                    colors:['#F5AB30'],
+                    // 图例
+                    legend: {
+                        align: 'left',
+                        verticalAlign: 'top',
+                        x: 0,
+                        y: -10,
+                        itemStyle: {
+                            color: '#999999',   
+                        }
+                    }, 
                     yAxis: {
                         min: 0,
                         title: null
                     },
-                    legend: {
-                        enabled: false
-                    },
-                    // tooltip: {
-                    //     pointFormat: '人口总量: <b>{point.y:.1f} 百万</b>'
-                    // },
                     //去除水印
                     credits: {
                         enabled:false
@@ -84,7 +88,7 @@ class CentraList extends React.Component{
                         enabled:false
                     },
                     series: [{
-                        name: '总人口',
+                        name: '受试者人数',
                         data: _this.state.treeData,
                         dataLabels: {
                             enabled: true,
